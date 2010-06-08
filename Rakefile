@@ -20,6 +20,27 @@ task :test do
   puts "To test the pure ruby driver: \nrake test:ruby"
 end
 
+task :java do
+  Rake::Task['build:java'].invoke
+end
+
+namespace :build do
+
+  desc "Build the java extensions."
+  task :java do
+    java_dir  = File.join(File.dirname(__FILE__), 'ext', 'java')
+    jar_dir   = File.join(java_dir, 'jar')
+
+    jruby_jar = File.join(jar_dir, 'jruby.jar')
+    mongo_jar = File.join(jar_dir, 'mongo.jar')
+
+    src_base   = File.join(java_dir, 'src')
+
+    system("javac -classpath #{jruby_jar}:#{mongo_jar} #{File.join(src_base, 'org', 'jbson', '*.java')}")
+    system("cd #{src_base} && jar cf #{File.join(jar_dir, 'jbson.jar')} #{File.join('.', 'org', 'jbson', '*.class')}")
+  end
+end
+
 namespace :test do
 
   desc "Test the driver with the c extension enabled."

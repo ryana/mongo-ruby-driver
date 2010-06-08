@@ -32,7 +32,28 @@ module BSON
   end
 end
 
-begin
+require 'bson/types/binary'
+require 'bson/types/code'
+require 'bson/types/dbref'
+require 'bson/types/objectid'
+require 'bson/types/min_max_keys'
+
+require 'base64'
+require 'bson/ordered_hash'
+require 'bson/byte_buffer'
+require 'bson/bson_ruby'
+require 'bson/exceptions'
+
+  if RUBY_PLATFORM =~ /java/
+    jar_dir = File.join(File.dirname(__FILE__), '..', 'ext', 'java', 'jar')
+    require File.join(jar_dir, 'mongo.jar')
+    require File.join(jar_dir, 'jbson.jar')
+    require 'bson/bson_java'
+    module BSON
+      BSON_CODER = BSON_JAVA
+    end
+  else
+    begin
   # Need this for running test with and without c ext in Ruby 1.9.
   raise LoadError if ENV['TEST_MODE'] && !ENV['C_EXT']
   require 'bson_ext/cbson'
@@ -55,15 +76,6 @@ rescue LoadError
   warn "  If you continue to receive this message after installing, make sure that the"
   warn "  bson_ext gem is in your load path and that the bson_ext and mongo gems are of the same version.\n"
 end
+end
 
-require 'bson/types/binary'
-require 'bson/types/code'
-require 'bson/types/dbref'
-require 'bson/types/objectid'
-require 'bson/types/min_max_keys'
 
-require 'base64'
-require 'bson/ordered_hash'
-require 'bson/byte_buffer'
-require 'bson/bson_ruby'
-require 'bson/exceptions'

@@ -52,5 +52,10 @@ module BSON
       "<BSON::Binary:#{object_id}>"
     end
 
+    def ==(other)
+      @data == other.data &&
+        @subtype == other.subtype
+    end
+
   end
 end

@@ -34,7 +34,7 @@ module BSON
       2006 => [214, 7, 0, 0]
     }
 
-    attr_reader :order
+    attr_reader :order, :data
 
     def initialize(initial_data=[])
       @buf    = initial_data
@@ -72,6 +72,14 @@ module BSON
 
     def rewind
       @cursor = 0
+    end
+
+    def ==(other)
+      @data.to_a == other.to_a
+    end
+
+    def eql?(other)
+      @data.to_a == other.to_a
     end
 
     def position

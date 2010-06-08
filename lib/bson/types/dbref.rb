@@ -38,5 +38,8 @@ module BSON
       "ns: #{namespace}, id: #{object_id}"
     end
 
+    def to_hash
+      {"$ns" => @namespace, "$id" => @object_id }
+    end
   end
 end
